@@ -33,8 +33,10 @@ LOOP:;
     printTokens( tokenV );
     */
     
+    char *envp[] = { "PATH=/bin:/usr/bin", (char *)0 };
+    
     //executing commands
-    executeCommand( tokenV );
+    executeCommand( tokenV, envp );
     
     goto LOOP;
     

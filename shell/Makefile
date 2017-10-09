@@ -9,6 +9,9 @@ OBJ = MyToc.o shellExecution.o shell.o
 shell: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS)
 	
+test: $(OBJ)
+	gcc -o $@ $^ $(CFLAGS)
+	
 clean:
 	rm -f *.o shell
 
