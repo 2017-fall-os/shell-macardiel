@@ -1,5 +1,5 @@
-#ifndef MyToc
-#define MyToc
+#ifndef shellExecution
+#define shellExecution
 
 int executeCommand( char **args );
 

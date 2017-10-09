@@ -25,7 +25,7 @@ LOOP:;
     
     tokenV = mytoc( input, ' ' );
     
-    //printTokens( tokenV );
+    printTokens( tokenV );
     
     /*
     printf( "command: %s\narguments:\n", *tokenV );
