@@ -4,7 +4,8 @@
 #define IN 1 /* Inside a word */
 #define OUT 0 /* outside a 'd */
 
-char ** mytoc( char *paragraph, char delim ){
+char ** mytoc( char *paragraph, char delim )
+{
     
     int n, i, currChar, numWords, state, pIndex; 
     // number, index, current character, number of words, and state (in or out), pointer index
@@ -46,4 +47,23 @@ char ** mytoc( char *paragraph, char delim ){
         }
     }
     return tokens;
+}
+
+void printTokens( char **tVector )
+{
+    char **tvTemp;
+    int n;
+    
+    tvTemp = tVector;
+    
+    for( n = 0; *tvTemp != '\0'; n++ ) {
+        printf( "%d: \"%s\"\n", n, *tvTemp );
+        tvTemp++;
+    }
+    printf( "\n" );
+}
+
+void freeTokens( char **tVector )
+{
+    free( tVector );
 }
