@@ -5,17 +5,41 @@
 #include <limits.h>
 
 #include "MyToc.h"
+#include "EnvpOps.h"
 #include "shellExecution.h"
 
-int main() {
+#define TRUE 1
+#define FALSE 0
+
+int main(int arcgc, char *argv[], char **envp )
+{
     char **tokenV;
+    char *envPath;
+    char *prompt = "[macardiel test shell]$ ";
+    int printPrompt = TRUE;
     char input[100];
     int exitKey = 1;
     
-    //printf( "\n----------entering macardiel shell----------\n" );
+    printf( "\n----------Use to debug----------\n" );
     
+    //printf( "\nenvpPATH ---> %s\n", envp[3] );
+    //envPath = mytoc( getEnv("PATH"), ':' );
+    //printTokens( envPath );
+    printf( "All good up till line 28\n" );
+    
+    envPath = getEnv( envp );
+    
+    printf( "got envPath\n" );
+    
+    printf( "%s\n", envPath );
+    
+    if( checkPS1( envp ) )
+        printPrompt = FALSE;
+    printf( "\n----------end debug----------\n\n" );
 LOOP:;
-    printf( "[macardiel test shell]$ " );
+    if( printPrompt )
+    printf( "%s", prompt );
+    
     fgets(input, 100, stdin );
     
     exitKey = strncmp(input, "exit\n", 5);
@@ -33,7 +57,7 @@ LOOP:;
     printTokens( tokenV );
     */
     
-    char *envp[] = { "PATH=/bin:/usr/bin", (char *)0 };
+    //char *envp[] = { "PATH=/bin:/usr/bin", (char *)0 };
     
     //executing commands
     executeCommand( tokenV, envp );

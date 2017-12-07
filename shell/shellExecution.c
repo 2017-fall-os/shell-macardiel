@@ -18,7 +18,7 @@ int executeCommand( char **args, char **envp )
     }
     
     else if( currPID == 0 ) {
-        printf( "Doing shellExecution.c else if\n" );
+        printf( "--Child: Doing shellExecution.c else if\n" );
         //freopen( "output.txt", "w", stdout );
         //printf( "output.txt", "w", stdout );
         int check = execve( args[0], args, envp );
@@ -38,7 +38,7 @@ int executeCommand( char **args, char **envp )
     else
     {
         wait(NULL);
-        printf( "Doing shellExecution.c else\n" );
+        printf( "--Parent: Doing shellExecution.c else\n" );
     }
     
     return 0;
