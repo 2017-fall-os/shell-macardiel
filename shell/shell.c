@@ -13,39 +13,44 @@
 
 int main(int arcgc, char *argv[], char **envp )
 {
-    char **tokenV;
-    char *envPath;
+    char **tokenV, **envPathVec;
+    char *envPathStr;
     char *prompt = "[macardiel test shell]$ ";
     int printPrompt = TRUE;
     char input[100];
-    int exitKey = 1;
+    int dontExit = 1;
     
+    // Debug Code
     printf( "\n----------Use to debug----------\n" );
     
-    //printf( "\nenvpPATH ---> %s\n", envp[3] );
-    //envPath = mytoc( getEnv("PATH"), ':' );
-    //printTokens( envPath );
-    printf( "All good up till line 28\n" );
+    envPathStr = getEnv( envp );
     
-    envPath = getEnv( envp );
+    printf( "%s\n", envPathStr );
     
-    printf( "got envPath\n" );
-    
-    printf( "%s\n", envPath );
-    
+    // Check if PS1 has something, else we dont print the prompt
     if( checkPS1( envp ) )
         printPrompt = FALSE;
-    printf( "\n----------end debug----------\n\n" );
+    printf( "----------end debug----------\n\n" );
+    //End debug code
+    
 LOOP:;
+    // Tokenize env path to get all possible directories
+    envPathVec = mytoc( envPathStr, ':' );
+    
+    // Print prompt if appropriate
     if( printPrompt )
     printf( "%s", prompt );
     
+    // read input
     fgets(input, 100, stdin );
     
-    exitKey = strncmp(input, "exit\n", 5);
-    //printf( "exitkey = %d\n", exitKey );
-    
-    if( !(exitKey) ) goto EXIT_SHELL;
+    // check if we must exit
+    dontExit = strncmp(input, "exit\n", 5);
+    if( !(dontExit) )
+    {
+        printf( "\tGood Bye!\n\n" );
+        goto EXIT_SHELL;
+    }
     
     tokenV = mytoc( input, ' ' );
     
@@ -60,7 +65,7 @@ LOOP:;
     //char *envp[] = { "PATH=/bin:/usr/bin", (char *)0 };
     
     //executing commands
-    executeCommand( tokenV, envp );
+    executeCommand( tokenV, envPathVec );
     
     goto LOOP;
     

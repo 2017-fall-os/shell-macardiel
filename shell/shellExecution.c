@@ -9,6 +9,7 @@ int executeCommand( char **args, char **envp )
 {
     pid_t currPID;
     currPID = fork();
+    int i;
     
     //printf( "currPID = %d\n", currPID );
     
@@ -21,18 +22,18 @@ int executeCommand( char **args, char **envp )
         printf( "--Child: Doing shellExecution.c else if\n" );
         //freopen( "output.txt", "w", stdout );
         //printf( "output.txt", "w", stdout );
-        int check = execve( args[0], args, envp );
-        
-        //if( check ) printf( "command not recognized; execution failed\n" );
-        if( check ) 
-        {   
-            exit(1);
-            char *BIN_Path[] = { "PATH=/bin:/usr/bin", (char *)0 };
-                
-            int checkPath = execve( args[0], args, BIN_Path );
-            
-            if( checkPath ) printf( "command not recognized; execution failed\n" );
+        for( i=0 ; envp ;)
+        {
+            char *currArg = (char *)malloc(sizeof(args[0])+sizeof(envp)+1);
+            strcpy( currArg, *envp );
+            strcat( currArg, "/" );
+            strcat( currArg, args[0] );
+            printf( "currArg=%s, *envp=%s\n\n", currArg, *envp );
+            int check = execve( currArg, args, envp );
+            //free(currArg);
+            envp++;
         }
+        exit(1);
     }
     
     else
