@@ -9,37 +9,39 @@ int executeCommand( char **args, char **envp )
 {
     pid_t currPID;
     currPID = fork();
+    char *currArg = (char *) malloc(sizeof(char*) );
     int i;
     
-    //printf( "currPID = %d\n", currPID );
+    printf( "currPID = %d\n", currPID );
     
     if( currPID < 0 ) {
-        fprintf( stderr, "Error during fork process\n" );
+        printf( "Error during fork process\n" );
         return -1;
     }
     
     else if( currPID == 0 ) {
-        printf( "--Child: Doing shellExecution.c else if\n" );
-        //freopen( "output.txt", "w", stdout );
-        //printf( "output.txt", "w", stdout );
-        for( i=0 ; envp ;)
+        printf("\nchild: fork returned %d\n\n", currPID);
+        
+        while( envp )
         {
-            char *currArg = (char *)malloc(sizeof(args[0])+sizeof(envp)+1);
             strcpy( currArg, *envp );
             strcat( currArg, "/" );
             strcat( currArg, args[0] );
-            printf( "currArg=%s, *envp=%s\n\n", currArg, *envp );
-            int check = execve( currArg, args, envp );
-            //free(currArg);
+            int retVal = execve( currArg, args, envp );
+            
+            fprintf(stderr, "%s: exec returned %d\n", args[0], retVal);
             envp++;
         }
-        exit(1);
+        printf( "Command not recognized\n" );
+        exit(2);
     }
     
     else
     {
         wait(NULL);
-        printf( "--Parent: Doing shellExecution.c else\n" );
+        printf("\nparent: child's pid=%d\n", currPID);
+        free( currArg );
+        return 0;
     }
     
     return 0;

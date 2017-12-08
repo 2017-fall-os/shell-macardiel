@@ -44,6 +44,6 @@ int checkPS1( char **envp )
                 PS1NotEmpty = 1;
         }
     }
-    printf( "PS1 = %s\n", PS1NotEmpty );
+    //printf( "PS1 = %s\n", PS1NotEmpty );
     return PS1NotEmpty;
 }
