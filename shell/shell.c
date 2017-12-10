@@ -3,51 +3,33 @@
 #include <ctype.h>
 #include <string.h>
 #include <limits.h>
+#include <unistd.h>
 
 #include "MyToc.h"
 #include "EnvpOps.h"
 #include "shellExecution.h"
 
-#define TRUE 1
-#define FALSE 0
-
 int main(int arcgc, char *argv[], char **envp )
 {
     char **envPathVec;
     char *envPathStr = (char *) malloc(sizeof(char *));
-    char *prompt = "[macardiel test shell]$ ";
-    int printPrompt = TRUE;
-    char input[100];
+    char *input;
     int dontExit = 1;
     
-LOOP:;
-    printf( "----------\n" );
-    
-    envPathStr = getEnv( envp );
-    printf( "%s\n\n", envPathStr );
-    
-    if( checkPS1( envp ) )
-        printPrompt = FALSE;
-    
-    // Print prompt if appropriate
-    if( printPrompt )
-    printf( "%s", prompt );
-    
-    // read input
-    fgets( input, 100, stdin );
-    
-    // check if we must exit
-    dontExit = strncmp(input, "exit\n", 5);
-    if( !(dontExit) )
+    while( dontExit )
     {
-        goto EXIT_SHELL;
+        envPathStr = getEnv( envp );
+        //printf( "%s\n\n", envPathStr );
+        
+        // read input
+        input = shellInput( envp );
+        //printf( "%s\n", input );
+        
+        // check if we must exit
+        dontExit = strncmp(input, "exit\0", 5);
+        
+        //Time to execute!
+        executeCommand( mytoc( input, ' ' ), mytoc( envPathStr, ':' ) );
     }
-    
-    //Time to execute!
-    executeCommand( mytoc( input, ' ' ), mytoc( envPathStr, ':' ) );
-    
-    goto LOOP;
-    
-EXIT_SHELL:;
     exit(1);
 }

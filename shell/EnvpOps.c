@@ -31,7 +31,7 @@ char *getEnv( char **envp )
 int checkPS1( char **envp )
 {
     char **tempTok;
-    int PS1NotEmpty = 0;
+    int PS1Empty = 1;
     int i;
     
     for( i=0 ; envp[i] ; i++ ) // looking for 'PATH'
@@ -40,10 +40,12 @@ int checkPS1( char **envp )
         
         if( strcmp( tempTok[0], "PS1" ) == 0 ) // have we found PATH?
         {
-            if( tempTok[1] ) // Does PATH have anything in it?
-                PS1NotEmpty = 1;
+            if( !tempTok[1] )
+            {// Does PATH have anything in it?
+                PS1Empty = 0;
+                return PS1Empty;
+            }
         }
     }
-    //printf( "PS1 = %s\n", PS1NotEmpty );
-    return PS1NotEmpty;
+    return PS1Empty;
 }
