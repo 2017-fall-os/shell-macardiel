@@ -11,25 +11,32 @@
 
 int main(int arcgc, char *argv[], char **envp )
 {
-    char **envPathVec;
-    char *envPathStr = (char *) malloc(sizeof(char *));
+    char **lines;
+    char **args;
     char *input;
     int dontExit = 1;
     
     while( dontExit )
     {
-        envPathStr = getEnv( envp );
-        //printf( "%s\n\n", envPathStr );
-        
         // read input
         input = shellInput( envp );
         //printf( "%s\n", input );
         
         // check if we must exit
         dontExit = strncmp(input, "exit\0", 5);
+        if( !dontExit ) goto EXIT_REQUEST;
         
-        //Time to execute!
-        executeCommand( mytoc( input, ' ' ), mytoc( envPathStr, ':' ) );
+        lines = mytoc( input, '\n' );
+        
+        while( *lines )
+        {
+            args = mytoc( *lines, ' ' );
+            lines++;
+            
+            executeCommand( args, envp );
+        }
     }
+    
+    EXIT_REQUEST:;
     exit(1);
 }

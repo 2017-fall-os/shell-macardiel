@@ -29,7 +29,7 @@ char ** mytoc( char *string, char delim )
     for( n = 0; paragraph[n]; n++ ) {
         currChar = paragraph[n];
         // if current char is a deliminator, we are not in a word
-        if( currChar == delim || currChar == '\n' || currChar == '\t' )
+        if( currChar == delim )
             state = OUT;
         // otherwise we are in a word and count up
         else if( state == OUT ) {

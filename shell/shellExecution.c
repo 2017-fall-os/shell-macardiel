@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "EnvpOps.h"
+#include "MyToc.h"
 
 char *shellInput( char **envp )
 {
@@ -33,6 +34,7 @@ int executeCommand( char **args, char **envp )
     pid_t currPID;
     currPID = fork();
     char *currArg = (char *) malloc(sizeof(char*) );
+    char **envPathVec;
     int i;
     
     //printf( "currPID = %d\n", currPID );
@@ -47,18 +49,20 @@ int executeCommand( char **args, char **envp )
         
         execve( args[0], args, envp );
         
-        while( envp )
+        envPathVec = mytoc( getEnv( envp ), ':' );
+    
+        while( *envPathVec )
         {
-            strcpy( currArg, *envp );
+            strcpy( currArg, *envPathVec );
             strcat( currArg, "/" );
             strcat( currArg, args[0] );
             
             int retVal = execve( currArg, args, envp );
             
             //fprintf(stderr, "%s: exec returned %d\n", args[0], retVal);
-            envp++;
+            envPathVec++;
         }
-        printf( "Command not recognized\n" );
+        printf( "Error: Command not recognized\n" );
         exit(2);
     }
     

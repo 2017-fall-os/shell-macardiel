@@ -1,9 +1,9 @@
 PASSED: no parameter, full pathname
   /bin/uname
-FAILED: two commands, full pathname
+PASSED: two commands, full pathname
   /bin/uname 
  /bin/uname
-FAILED: two commands, blank line in-between, full pathname
+PASSED: two commands, blank line in-between, full pathname
   /bin/uname 
 
  /bin/uname
@@ -19,7 +19,7 @@ FAILED: 2 pipes
   cat /etc/passwd | sort | wc 
 PASSED: redirect input
   cat < /etc/passwd
-FAILED: redirect output
+PASSED: redirect output
   uname > /tmp/x 
  cat /tmp/x
 FAILED: background
