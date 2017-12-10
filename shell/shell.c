@@ -15,9 +15,12 @@ int main(int arcgc, char *argv[], char **envp )
     char **args;
     char *input;
     int dontExit = 1;
+    int cdRet = 0;
     
+    SKIP_EXEC:;
     while( dontExit )
     {
+        
         // read input
         input = shellInput( envp );
         //printf( "%s\n", input );
@@ -25,6 +28,22 @@ int main(int arcgc, char *argv[], char **envp )
         // check if we must exit
         dontExit = strncmp(input, "exit\0", 5);
         if( !dontExit ) goto EXIT_REQUEST;
+        
+        // check if changing directory
+        if( strncmp(input, "cd ", 3 ) == 0 )
+        {
+            printf( "we got to cd\n" );
+            
+            lines = mytoc( input, ' ' );
+            printf( "tokens:\n" );
+            printTokens( lines );
+            
+            cdRet = chdir( lines[1] );
+            
+            if( cdRet == 0 )
+                write( 1, "Error: Failed Directory Change\n", 32 );
+            goto SKIP_EXEC;
+        }
         
         lines = mytoc( input, '\n' );
         
