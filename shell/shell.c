@@ -11,7 +11,7 @@
 
 int main(int arcgc, char *argv[], char **envp )
 {
-    char **lines, **cdVec, **args, **directories;
+    char **lines, **cdVec, **pipeVec, **args, **directories;
     char *input, currWD[256];
     int i, dontExit = 1;
     
@@ -64,12 +64,25 @@ int main(int arcgc, char *argv[], char **envp )
                 goto SKIP_EXEC;
         }
         
+        START_EXECUTION:;
         while( *lines )
-        {
+        {   
+            /* Not working currently
+            // check if pipe needed
+            pipeVec = mytoc( *lines, '|' );
+            if( pipeVec[1] )
+            {
+                printTokens( pipeVec );
+                printf( "---debug---seems like we are piping!\n" );
+                lines++;
+                executePipes( pipeVec, envp );
+                goto START_EXECUTION;
+            }
+            */
             args = mytoc( *lines, ' ' );
             lines++;
-            
             executeCommand( args, envp );
+            
         }
     }
     
