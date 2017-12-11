@@ -11,14 +11,13 @@
 
 int main(int arcgc, char *argv[], char **envp )
 {
-    char **lines, **args, **directories;
+    char **lines, **cdVec, **args, **directories;
     char *input, currWD[256];
     int i, dontExit = 1;
     
     SKIP_EXEC:;
     while( dontExit )
     {
-        
         // read input
         input = shellInput( envp );
         //printf( "%s\n", input );
@@ -27,15 +26,17 @@ int main(int arcgc, char *argv[], char **envp )
         dontExit = strncmp(input, "exit\0", 5);
         if( !dontExit ) goto EXIT_REQUEST;
         
+        lines = mytoc( input, '\n' );
+        
         // check if changing directory
-        if( strncmp(input, "cd ", 3 ) == 0 )
+        if( strncmp( *lines, "cd ", 3 ) == 0 )
         {
-            printf( "we got to cd\n" );
+            //printf( "we got to cd\n" );
             
-            lines = mytoc( input, ' ' );
+            cdVec = mytoc( input, ' ' );
             
             // if input is ".." then we go back one directory
-            if( strncmp(lines[1], "..\0", 3 ) == 0 )
+            if( strncmp(cdVec[1], "..\0", 3 ) == 0 )
             {
                 //printf( "we got to .., \n" );
                 getcwd( currWD, sizeof( currWD ) );
@@ -50,18 +51,18 @@ int main(int arcgc, char *argv[], char **envp )
                 
                 //printf( "input=%s\n", input );
                 chdir( input );
-                
+                input = cdVec[1];
             }
             
             else
             {
-                chdir( lines[1] ) == 0;
+                chdir( cdVec[1] ) == 0;
             }
             
-            goto SKIP_EXEC;
+            lines++;
+            if( !lines )
+                goto SKIP_EXEC;
         }
-        
-        lines = mytoc( input, '\n' );
         
         while( *lines )
         {
