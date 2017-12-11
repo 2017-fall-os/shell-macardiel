@@ -11,11 +11,9 @@
 
 int main(int arcgc, char *argv[], char **envp )
 {
-    char **lines;
-    char **args;
-    char *input;
-    int dontExit = 1;
-    int cdRet = 0;
+    char **lines, **args, **directories;
+    char *input, currWD[256];
+    int i, dontExit = 1;
     
     SKIP_EXEC:;
     while( dontExit )
@@ -35,13 +33,31 @@ int main(int arcgc, char *argv[], char **envp )
             printf( "we got to cd\n" );
             
             lines = mytoc( input, ' ' );
-            printf( "tokens:\n" );
-            printTokens( lines );
             
-            cdRet = chdir( lines[1] );
+            // if input is ".." then we go back one directory
+            if( strncmp(lines[1], "..\0", 3 ) == 0 )
+            {
+                //printf( "we got to .., \n" );
+                getcwd( currWD, sizeof( currWD ) );
+                directories = mytoc( currWD, '/' );
+                
+                strcpy( input, "" );
+                for( i=1 ; ( directories[i] && directories[i-1] ); i++ )
+                {
+                    strcat( input, "/" );
+                    strcat( input, directories[i-1] );
+                }
+                
+                //printf( "input=%s\n", input );
+                chdir( input );
+                
+            }
             
-            if( cdRet == 0 )
-                write( 1, "Error: Failed Directory Change\n", 32 );
+            else
+            {
+                chdir( lines[1] ) == 0;
+            }
+            
             goto SKIP_EXEC;
         }
         
